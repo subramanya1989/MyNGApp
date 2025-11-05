@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h2 *ngIf="schema.title">{{ schema.title }}</h2>
+  <div *ngFor="let field of schema.fields" [ngClass]="field.type === 'checkbox' ? field.type : field.name">
+    <ng-container *ngIf="isFieldVisible(field) && !field.hidden">
+      <label [for]="field.name">{{ field.label }}</label>
+      <ng-container [ngSwitch]="field.type">
+        <input *ngSwitchCase="'text'" [formControlName]="field.name" [id]="field.name" type="text" [readonly]="field.readonly" [disabled]="field.disabled" [placeholder]="field.name" />
+        <textarea *ngSwitchCase="'textarea'" [formControlName]="field.name" [id]="field.name" [readonly]="field.readonly" [disabled]="field.disabled" [placeholder]="field.name"></textarea>
+        <input *ngSwitchCase="'date'" [formControlName]="field.name" [id]="field.name" type="date" [readonly]="field.readonly" [disabled]="field.disabled" [placeholder]="field.name" />
+        <select *ngSwitchCase="'dropdown'" [formControlName]="field.name" [id]="field.name" [disabled]="field.disabled" [placeholder]="field.name">
+          <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+        </select>
+        <select *ngSwitchCase="'multiselect'" [formControlName]="field.name" [id]="field.name" multiple [disabled]="field.disabled" [placeholder]="field.name">
+          <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+        </select>
+        <input *ngSwitchCase="'checkbox'" [ngClass]="field.type === 'checkbox' ? field.type + '-input' : field.name" [formControlName]="field.name" [id]="field.name" type="checkbox" [disabled]="field.disabled" />
+      </ng-container>
+      <div *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched" class="error">
+        <span *ngIf="form.get(field.name)?.errors?.['required']">{{ field.validation?.requiredMessage || field.label + ' is required.' }}</span>
+        <span *ngIf="form.get(field.name)?.errors?.['pattern']">{{ field.validation?.message || 'Invalid format.' }}</span>
+      </div>
+    </ng-container>
+  </div>
+  <button type="submit">Submit</button>
+</form>

@@ -1,0 +1,17 @@
+<div class="main-container">
+  <div class="center-container">
+    <h1>Dynamic Form Renderer</h1>
+  </div>
+  <div class="center-container1">
+    <label class="switch">
+      <input type="checkbox" (change)="toggleSchema()">
+      <span class="slider round"></span>
+    </label>    
+    <span>{{ isUserRegistrationSchema ? 'User Registration' : 'Feedback' }}</span>
+  </div>
+  <app-dynamic-form *ngIf="activeSchema" [schema]="activeSchema" (formSubmit)="onFormSubmit($event)"></app-dynamic-form>
+  <div *ngIf="submittedData">
+    <h3>Submitted Data</h3>
+    <pre>{{ submittedData | json }}</pre>
+  </div>
+</div>
